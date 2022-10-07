@@ -37,7 +37,11 @@
         android:id="@+id/exploreFragment"
         android:name="com.wac.mangoplayerpoc.presentation.explore.ExploreFragment"
         android:label="fragment_explore"
-        tools:layout="@layout/fragment_explore" />
+        tools:layout="@layout/fragment_explore" >
+        <action
+            android:id="@+id/action_exploreFragment_to_reelsFragment"
+            app:destination="@id/reelsFragment" />
+    </fragment>
     <activity
         android:id="@+id/nowPlayingActivity"
         android:name="com.wac.mangoplayerpoc.presentation.nowplaying.NowPlayingActivity"
@@ -48,4 +52,14 @@
             app:argType="com.wac.mangoplayerpoc.data.model.Song"
             app:nullable="true" />
     </activity>
+    <fragment
+        android:id="@+id/reelsFragment"
+        android:name="com.wac.mangoplayerpoc.presentation.reels.ReelsFragment"
+        android:label="fragment_reels"
+        tools:layout="@layout/fragment_reels" >
+        <argument
+            android:name="song"
+            app:argType="com.wac.mangoplayerpoc.data.Reel"
+            app:nullable="false" />
+    </fragment>
 </navigation>

@@ -1,5 +1,6 @@
 package com.wac.mangoplayerpoc.presentation.adapter
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -13,12 +14,13 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.wac.mangoplayerpoc.data.Reel
 import com.wac.mangoplayerpoc.data.model.Song
 import com.wac.mangoplayerpoc.databinding.ReelsItemLayoutBinding
 
 
 class ReelsAdapter(private val glide: RequestManager) :
-    ListAdapter<Song, ReelsAdapter.ItemViewHolder>(DiffCallBack()) {
+    ListAdapter<Reel, ReelsAdapter.ItemViewHolder>(DiffCallBack()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ReelsItemLayoutBinding.inflate(layoutInflater, parent, false)
@@ -33,31 +35,36 @@ class ReelsAdapter(private val glide: RequestManager) :
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(item: Song) = with(binding) {
-           val audioAttributes= AudioAttributes.Builder()
-                .setContentType(C.AUDIO_CONTENT_TYPE_UNKNOWN)
-                .setUsage(C.USAGE_MEDIA)
-                .build()
+        fun bind(item: Reel) = with(binding) {
+//            val audioAttributes = AudioAttributes.Builder()
+//                .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
+//                .setUsage(C.USAGE_MEDIA)
+//                .build()
+//
+//            val exoPlayer = ExoPlayer.Builder(itemView.context).apply {
+//                setAudioAttributes(audioAttributes, false)
+//                setHandleAudioBecomingNoisy(true)
+//            }.build()
+//            exoPlayer.volume = 0f
+//            exoPlayer.setMediaSource(
+//                ProgressiveMediaSource.Factory(DefaultDataSource.Factory(itemView.context))
+//                    .createMediaSource(
+//                        MediaItem.fromUri(
+//                            item.video
+//                        )
+//                    )
+//            )
+//            exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+//            exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
+//            exoPlayer.prepare()
+//            exoPlayer.playWhenReady = false
+//            binding.reelsVideoView.player = exoPlayer
 
-            val exoPlayer = ExoPlayer.Builder(itemView.context).apply {
-//                setAudioAttributes(audioAttributes,false)
-                setHandleAudioBecomingNoisy(true)
-            }.build()
-            exoPlayer.volume = 0f
-            exoPlayer.setMediaSource(
-                ProgressiveMediaSource.Factory(DefaultDataSource.Factory(itemView.context))
-                    .createMediaSource(
-                        MediaItem.fromUri(
-                        item.songUrl
 
-                        )
-                    )
-            )
-            exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
-            exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
-            exoPlayer.prepare()
-            exoPlayer.playWhenReady = true
-            binding.reelsVideoView.player = exoPlayer
+            glide.load(item.videoImage).into(binding.videoImage)
+
+//            binding.videoView.setVideoURI(Uri.parse(item.video))
+//            binding.videoView.start()
             root.setOnClickListener {
                 onItemClickListener?.let { click ->
                     click(item)
@@ -67,18 +74,18 @@ class ReelsAdapter(private val glide: RequestManager) :
         }
     }
 
-    private var onItemClickListener: ((Song) -> Unit)? = null
-    fun setOnItemClickListener(listener: (Song) -> Unit) {
+    private var onItemClickListener: ((Reel) -> Unit)? = null
+    fun setOnItemClickListener(listener: (Reel) -> Unit) {
         onItemClickListener = listener
     }
 
 
-    class DiffCallBack : DiffUtil.ItemCallback<Song>() {
-        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
+    class DiffCallBack : DiffUtil.ItemCallback<Reel>() {
+        override fun areItemsTheSame(oldItem: Reel, newItem: Reel): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {
+        override fun areContentsTheSame(oldItem: Reel, newItem: Reel): Boolean {
             return oldItem == newItem
         }
 

@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var glide: RequestManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         binding = ActivityMainBinding.inflate(layoutInflater)
 //        observeMusic()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -185,7 +185,8 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, navDestination, _ ->
             destination = navDestination
             observeMusic()
-            binding.bottomNavigationView.isVisible = destination.id != R.id.nowPlayingFragment
+            binding.bottomNavigationView.isVisible =
+                destination.id != R.id.nowPlayingFragment && destination.id != R.id.reelsFragment
             if (destination.id == R.id.videoMusicListFragment) {
                 mainViewModel.setVideoPlay(true)
             }
@@ -214,8 +215,7 @@ class MainActivity : AppCompatActivity() {
                 TranslateAnimation(0f, 0f, 0f, binding.bottomNavigationView.height.toFloat())
             animate.duration = 500
             binding.bottomNavigationView.startAnimation(animate)
-        }
-        else{
+        } else {
             this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             WindowCompat.setDecorFitsSystemWindows(this.window, true)
             WindowInsetsControllerCompat(this.window, binding.root).show(
@@ -233,7 +233,7 @@ class MainActivity : AppCompatActivity() {
                         setCurPlayingData(it.song)
 
                         binding.curPlayingItem.isVisible =
-                            destination.id != R.id.nowPlayingFragment && it.showLastPlayedSong
+                            destination.id != R.id.nowPlayingFragment && it.showLastPlayedSong &&  destination.id != R.id.reelsFragment
                         binding.linearProgressIndicator.isVisible = binding.curPlayingItem.isVisible
 
                         binding.linearProgressIndicator.max = it.duration.toInt()

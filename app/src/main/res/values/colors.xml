@@ -14,4 +14,5 @@
     <color name="bottomNavColor">#FBFBFB</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="transparent_black">#81070707</color>
+    <color name="transparent_black_reels">#DA070707</color>
 </resources>
