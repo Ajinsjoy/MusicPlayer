@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mob_navigation"
-    app:startDestination="@id/musicListFragment">
+    app:startDestination="@id/exploreFragment">
 
     <fragment
         android:id="@+id/musicListFragment"
         android:name="com.wac.mangoplayerpoc.presentation.musiclist.MusicListFragment"
         android:label="fragment_music_list"
-        tools:layout="@layout/fragment_music_list" >
+        tools:layout="@layout/fragment_music_list">
 
     </fragment>
     <action
+        android:id="@+id/mob_navigation_to_playingNowFragment"
+        app:destination="@id/playingNowFragment" />
+    <action
         android:id="@+id/mob_navigation_to_nowPlayingFragment"
         app:destination="@id/nowPlayingFragment" />
-    <action
-        android:id="@+id/mob_navigation_to_nowPlayingActivity"
-        app:destination="@id/nowPlayingActivity" />
     <fragment
         android:id="@+id/nowPlayingFragment"
         android:name="com.wac.mangoplayerpoc.presentation.nowplaying.NowPlayingFragment"
         android:label="fragment_now_playing"
-        tools:layout="@layout/fragment_now_playing" >
+        tools:layout="@layout/fragment_now_playing">
         <argument
             android:name="song"
             app:argType="com.wac.mangoplayerpoc.data.model.Song"
@@ -37,29 +37,28 @@
         android:id="@+id/exploreFragment"
         android:name="com.wac.mangoplayerpoc.presentation.explore.ExploreFragment"
         android:label="fragment_explore"
-        tools:layout="@layout/fragment_explore" >
+        tools:layout="@layout/fragment_explore">
         <action
             android:id="@+id/action_exploreFragment_to_reelsFragment"
             app:destination="@id/reelsFragment" />
     </fragment>
-    <activity
-        android:id="@+id/nowPlayingActivity"
-        android:name="com.wac.mangoplayerpoc.presentation.nowplaying.NowPlayingActivity"
-        android:label="activity_now_playing"
-        tools:layout="@layout/activity_now_playing" >
-        <argument
-            android:name="song"
-            app:argType="com.wac.mangoplayerpoc.data.model.Song"
-            app:nullable="true" />
-    </activity>
     <fragment
         android:id="@+id/reelsFragment"
         android:name="com.wac.mangoplayerpoc.presentation.reels.ReelsFragment"
         android:label="fragment_reels"
-        tools:layout="@layout/fragment_reels" >
+        tools:layout="@layout/fragment_reels">
         <argument
             android:name="song"
             app:argType="com.wac.mangoplayerpoc.data.Reel"
             app:nullable="false" />
     </fragment>
+    <fragment
+        android:id="@+id/playingNowFragment"
+        android:name="com.wac.mangoplayerpoc.presentation.motionlayout.PlayingNowFragment"
+        android:label="fragment_playing_now"
+        tools:layout="@layout/fragment_playing_now" >
+
+
+    </fragment>
+
 </navigation>

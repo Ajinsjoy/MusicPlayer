@@ -11,7 +11,6 @@ import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.wac.mangoplayerpoc.common.Constants
 import com.wac.mangoplayerpoc.data.model.MusicModel
 import com.wac.mangoplayerpoc.repository.SongRepository
 import kotlinx.coroutines.Dispatchers
@@ -25,27 +24,28 @@ class MusicSource @Inject constructor(
 ) {
     var songs = emptyList<MediaMetadataCompat>()
     lateinit var allSongs: List<MusicModel>
-    suspend fun fetchMediaData(songId: String) = withContext(Dispatchers.IO) {
+    suspend fun fetchMediaData(songId: String, list: List<MusicModel>) = withContext(Dispatchers.IO) {
         state = State.STATE_INITIALIZING
-        when (songId) {
-            "video" -> {
-                songRepository.getVideoMusic().collect {
-                    allSongs = it
-                }
-
-            }
-            "video1" -> {
-
-                allSongs = songRepository.getVideoSong().map { it.toMusic() }
-
-            }
-            "song" -> {
-                songRepository.getMusic().collect {
-                    allSongs = it
-                }
-
-            }
-        }
+        allSongs=list
+//        when (songId) {
+//            "video" -> {
+//                songRepository.getVideoMusic().collect {
+//                    allSongs = it
+//                }
+//
+//            }
+//            "video1" -> {
+//
+//                allSongs = songRepository.getVideoSong().map { it.toMusic() }
+//
+//            }
+//            "song" -> {
+//                songRepository.getMusic().collect {
+//                    allSongs = it
+//                }
+//
+//            }
+//        }
 
 
         songs = allSongs.map { song ->

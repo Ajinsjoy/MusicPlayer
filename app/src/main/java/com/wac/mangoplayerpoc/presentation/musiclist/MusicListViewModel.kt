@@ -37,6 +37,7 @@ class MusicListViewModel @Inject constructor(
     init {
 
         viewModelScope.launch {
+
             _mediaItem.emit(_mediaItem.value.copy(loading = true))
             songRepository.getMusic().collect {
                 _mediaItem.emit(

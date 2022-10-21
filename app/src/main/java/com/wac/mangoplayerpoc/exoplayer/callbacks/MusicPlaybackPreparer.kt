@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.os.ResultReceiver
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.wac.mangoplayerpoc.common.Constants.MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS
-import com.wac.mangoplayerpoc.common.Constants.MEDIA_ROOT_ID
+import com.wac.mangoplayerpoc.data.model.MusicModel
 import com.wac.mangoplayerpoc.exoplayer.MusicService
 import com.wac.mangoplayerpoc.exoplayer.MusicSource
 import kotlinx.coroutines.launch
@@ -30,7 +31,10 @@ class MusicPlaybackPreparer(
         //edit data or fetch more data from api
 
         musicService.serviceScope.launch {
-            musicSource.fetchMediaData(command)
+            val list = extras?.getParcelableArrayList<MusicModel>("list")
+            Log.d("listFrom", "onCommand: $list")
+
+            list?.let { musicSource.fetchMediaData(command, it) }
         }
 //        musicService.notifyChildrenChanged(MEDIA_ROOT_ID)
 

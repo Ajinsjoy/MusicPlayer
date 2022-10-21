@@ -15,4 +15,6 @@
     </string>
     <string name="time_split">\u0020 /
         \u0020</string>
+    <string name="song">Song</string>
+    <string name="video">Video</string>
 </resources>

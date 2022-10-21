@@ -37,6 +37,14 @@ class SongRepositoryImpl @Inject constructor(
         emit(song)
     }
 
+    override fun getSong(): Flow<List<MusicModel>> = flow {
+        val musicDataInputStream = application.resources.openRawResource(R.raw.music)
+        val music = musicDataInputStream.bufferedReader().use { it.readText() }
+        val gsonObj = Gson()
+        val musicResponse: MusicResponse = gsonObj.fromJson(music, MusicResponse::class.java)
+        musicResponse.music?.map { it.toMusic() }?.let { emit(it) }
+    }
+
     override fun getVideoMusic(): Flow<List<MusicModel>> = flow {
 
         val musicDataInputStream = application.resources.openRawResource(R.raw.video)

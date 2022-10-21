@@ -1,21 +1,23 @@
-package com.wac.mangoplayerpoc.presentation.nowplaying
-
+package com.wac.mangoplayerpoc.presentation.motionlayout
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -28,17 +30,18 @@ import com.google.android.material.transition.MaterialElevationScale
 import com.wac.mangoplayerpoc.R
 import com.wac.mangoplayerpoc.data.model.Song
 import com.wac.mangoplayerpoc.databinding.FragmentNowPlayingBinding
+import com.wac.mangoplayerpoc.databinding.FragmentPlayingNowBinding
 import com.wac.mangoplayerpoc.presentation.main.MainActivityViewModel
+import com.wac.mangoplayerpoc.presentation.nowplaying.NowPlayingFragmentArgs
+import com.wac.mangoplayerpoc.presentation.nowplaying.NowPlayingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applyInsetter
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
-class NowPlayingFragment : Fragment(R.layout.fragment_now_playing) {
+class PlayingNowFragment : Fragment(R.layout.fragment_playing_now) {
     @Inject
     lateinit var glide: RequestManager
 
@@ -49,39 +52,43 @@ class NowPlayingFragment : Fragment(R.layout.fragment_now_playing) {
     private lateinit var musicViewModel: NowPlayingViewModel
     lateinit var song: Song
     private val activityViewModel: MainActivityViewModel by activityViewModels()
-    lateinit var binding: FragmentNowPlayingBinding
-    private val args: NowPlayingFragmentArgs by navArgs()
+    lateinit var binding: FragmentPlayingNowBinding
+
+    //    private val args: PlayingNowFragmentArgs by navArgs()
     private var shouldUpdateSeekbar = true
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentNowPlayingBinding.bind(view)
+        binding = FragmentPlayingNowBinding.bind(view)
         musicViewModel = ViewModelProvider(requireActivity())[NowPlayingViewModel::class.java]
 
 
 
         setUpData()
         clickListener()
-        args.song?.let {
-            activityViewModel.playOrToggleSong(
-                it, false
-            )
-        }
+//        args.song?.let {
+//            activityViewModel.playOrToggleSong(
+//                it, false
+//            )
+//        }
 
-        if (activityViewModel.showVideo) {
-            binding.materialCardView.isVisible = false
-            binding.includePlaySetting.root.isVisible = false
-            binding.epVideoView.isVisible = true
-        }
+//        if (activityViewModel.showVideo) {
+//            binding.materialCardView.isVisible = false
+//            binding.includePlaySetting.root.isVisible = false
+//            binding.epVideoView.isVisible = true
+//        }
 
         observeMusic()
         exitTransition = MaterialElevationScale(/* growing= */ false)
         reenterTransition = MaterialElevationScale(/* growing= */ true)
 
         binding.epVideoView.player = exoPlayer
-
         Timber.tag("exoInitial").d("onViewCreated: %s", exoPlayer.videoScalingMode)
+//
+//        binding.epVideoView.isVisible = exoPlayer.audioFormat?.id != ".mp3"
+//        binding.songIcon.isVisible = exoPlayer.audioFormat?.id == ".mp3"
+
 
     }
 
@@ -129,12 +136,16 @@ class NowPlayingFragment : Fragment(R.layout.fragment_now_playing) {
 
 
     private fun clickListener() {
+        binding.toggle.setOnCheckedChangeListener { _, id ->
+            binding.epVideoView.isVisible = id == binding.videoBtn.id
+            binding.curSongIconLayout.isVisible = id!= binding.videoBtn.id
+        }
 
         binding.epVideoView.findViewById<AppCompatImageView>(R.id.viewType).setOnClickListener {
             changeScreenOrientation()
         }
 
-        with(binding.includePlaySetting) {
+        with(binding) {
             playPauseCard.setOnClickListener {
                 song.let { it1 ->
                     activityViewModel.playOrToggleSong(
@@ -142,10 +153,20 @@ class NowPlayingFragment : Fragment(R.layout.fragment_now_playing) {
                     )
                 }
             }
-            nextIcon.setOnClickListener {
+            collapsedPlayPauseImage.setOnClickListener {
+                song.let { it1 ->
+                    activityViewModel.playOrToggleSong(
+                        it1, true
+                    )
+                }
+            }
+            collapsedNextIconButton.setOnClickListener {
                 activityViewModel.skipToNextSong()
             }
-            previousIcon.setOnClickListener {
+            nextIconButton.setOnClickListener {
+                activityViewModel.skipToNextSong()
+            }
+            previousIconButton.setOnClickListener {
                 activityViewModel.skipToPreviousSong()
             }
 
@@ -171,7 +192,7 @@ class NowPlayingFragment : Fragment(R.layout.fragment_now_playing) {
                     activityViewModel.skipToPreviousSong()
                 }
 
-            seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            seekBarExpanded.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seek: SeekBar?, progress: Int, fromUser: Boolean) {
                     if (fromUser) {
                         setCurrentPlayingTime(progress.toLong())
@@ -215,12 +236,12 @@ class NowPlayingFragment : Fragment(R.layout.fragment_now_playing) {
                     }
                 })
         }
-        binding.playVideo.setOnCheckedChangeListener { _, check ->
-            activityViewModel.showVideo = check
-            binding.epVideoView.isVisible = check
-            binding.materialCardView.isVisible = !check
-            binding.includePlaySetting.root.isVisible = !check
-        }
+//        binding.playVideo.setOnCheckedChangeListener { _, check ->
+//            activityViewModel.showVideo = check
+//            binding.epVideoView.isVisible = check
+//            binding.materialCardView.isVisible = !check
+//            binding.includePlaySetting.root.isVisible = !check
+//        }
 
     }
 
@@ -231,34 +252,44 @@ class NowPlayingFragment : Fragment(R.layout.fragment_now_playing) {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     musicViewModel.mediaItem.collect {
 
-                        binding.progressBar.isVisible =
-                            it.buffering
+//                        binding.progressBar.isVisible =
+//                            it.buffering
 
                         it.song?.let { songItem ->
                             song = songItem
-                            songName.text = songItem.title
-                            glide.load(songItem.imageUrl).into(songImage)
+                            collapsedSongTitle.text = songItem.title
+                            collapsedSongSubTitle.text = songItem.subTitle
+                            glide.load(songItem.imageUrl).into(binding.songIcon)
                         }
+                        val pattern =Regex("mp3")
+//                        Log.d("logigData", "setUpData:${exoPlayer.audioFormat?.sampleMimeType?.let { it1 ->
+//                            it.toString().contains("mp3")
+//                        }} ")
 
-                        binding.includePlaySetting.playPause.setImageResource(
-                            if (it.isPlaying)
-                                R.drawable.ic_round_pause_24
-                            else
-                                R.drawable.ic_round_play_arrow_24
-                        )
 
-                        binding.epVideoView.findViewById<AppCompatImageView>(R.id.playPause)
-                            .setImageResource(
-                                if (it.isPlaying)
-                                    R.drawable.ic_round_pause_24
-                                else
-                                    R.drawable.ic_round_play_arrow_24
-                            )
+                        val image= if (it.isPlaying)
+                            R.drawable.ic_round_pause_24
+                        else
+                            R.drawable.ic_round_play_arrow_24
+                        binding.playPauseImage.setImageDrawable(ContextCompat.getDrawable(requireContext(),image))
+                        binding.collapsedPlayPauseImage.setImageDrawable(ContextCompat.getDrawable(requireContext(),image))
 
-                        binding.includePlaySetting.seekBar.apply {
+//                        binding.epVideoView.findViewById<AppCompatImageView>(R.id.playPause)
+//                            .setImageResource(
+//                                if (it.isPlaying)
+//                                    R.drawable.ic_round_pause_24
+//                                else
+//                                    R.drawable.ic_round_play_arrow_24
+//                            )
+
+                        binding.seekBarExpanded.apply {
                             progress = it.progress
                             max = it.duration.toInt()
                         }
+//                        binding.seekBarCollapsed.apply {
+//                            progress = it.progress
+//                            max = it.duration.toInt()
+//                        }
                         binding.epVideoView.findViewById<SeekBar>(R.id.seekBar).apply {
                             progress = it.progress
                             max = it.duration.toInt()
@@ -272,7 +303,7 @@ class NowPlayingFragment : Fragment(R.layout.fragment_now_playing) {
 
             musicViewModel.currentPlayingPosition.observe(viewLifecycleOwner) {
                 if (shouldUpdateSeekbar) {
-                    includePlaySetting.seekBar.progress = it.toInt()
+                    seekBarExpanded.progress = it.toInt()
                     setCurrentPlayingTime(it)
                 }
             }
@@ -284,15 +315,13 @@ class NowPlayingFragment : Fragment(R.layout.fragment_now_playing) {
 
 
         }
-
-
     }
 
 
     private fun setPlayingDurationTime(ms: Long) {
         val formatter = SimpleDateFormat("mm:ss", Locale.getDefault())
         formatter.timeZone = TimeZone.getTimeZone("IST")
-        binding.includePlaySetting.timeEnd.text = formatter.format(
+        binding.timeEnd.text = formatter.format(
             ms
         )
         binding.epVideoView.findViewById<TextView>(R.id.totalTime).text = formatter.format(
@@ -303,9 +332,11 @@ class NowPlayingFragment : Fragment(R.layout.fragment_now_playing) {
     private fun setCurrentPlayingTime(ms: Long) {
         val formatter = SimpleDateFormat("mm:ss", Locale.getDefault())
         formatter.timeZone = TimeZone.getTimeZone("IST")
-        binding.includePlaySetting.timeStart.text = formatter.format(ms)
+        binding.timeStart.text = formatter.format(ms)
         binding.epVideoView.findViewById<TextView>(R.id.currentTime).text = formatter.format(
             ms
         )
     }
+
+
 }

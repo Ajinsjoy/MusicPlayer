@@ -61,7 +61,7 @@ class ReelsAdapter(private val glide: RequestManager) :
 //            binding.reelsVideoView.player = exoPlayer
 
 
-            glide.load(item.videoImage).into(binding.videoImage)
+            glide.load(item.video).into(binding.videoImage)
 
 //            binding.videoView.setVideoURI(Uri.parse(item.video))
 //            binding.videoView.start()

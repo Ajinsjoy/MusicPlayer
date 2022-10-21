@@ -56,11 +56,9 @@ class ReelsFragment : Fragment(R.layout.fragment_reels) {
 
         binding = FragmentReelsBinding.bind(view)
         exoPlayer = ExoPlayer.Builder(requireContext()).apply {
-//                setAudioAttributes(audioAttributes,false)
             setHandleAudioBecomingNoisy(true)
         }.build()
 
-        exoPlayer.volume = 0f
         val mediaSource =
             ProgressiveMediaSource.Factory(DefaultDataSource.Factory(requireContext()))
                 .createMediaSource(
@@ -71,8 +69,6 @@ class ReelsFragment : Fragment(R.layout.fragment_reels) {
         exoPlayer.setMediaSource(
             mediaSource
         )
-
-//        exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
         exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
         exoPlayer.prepare()
         exoPlayer.playWhenReady = true
@@ -81,12 +77,6 @@ class ReelsFragment : Fragment(R.layout.fragment_reels) {
         binding.title.text = args.song.comment
         binding.album.text = args.song.userName
 
-        //        hideSystemUI()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
     }
 
     override fun onPause() {
@@ -94,23 +84,6 @@ class ReelsFragment : Fragment(R.layout.fragment_reels) {
         exoPlayer.pause()
         exoPlayer.stop()
         exoPlayer.release()
-        //        showSystemUI()
 
     }
-
-    private fun hideSystemUI() {
-
-        WindowInsetsControllerCompat(requireActivity().window, requireView()).let { controller ->
-            controller.hide(WindowInsetsCompat.Type.statusBars())
-            controller.systemBarsBehavior =
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-    }
-
-    private fun showSystemUI() {
-        WindowInsetsControllerCompat(requireActivity().window, requireView()).show(
-            WindowInsetsCompat.Type.statusBars()
-        )
-    }
-
 }

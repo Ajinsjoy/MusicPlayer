@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        app:constraintSetEnd="@id/expanded"
+        app:constraintSetStart="@id/collapsed"
+        app:duration="500"
+        app:motionInterpolator="easeInOut">
+
+        <OnSwipe
+            app:dragDirection="dragUp"
+            app:maxAcceleration="2800"
+            app:touchAnchorSide="bottom"
+            app:touchRegionId="@id/rootLayout" />
+
+        <KeyFrameSet>
+
+
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="50"
+                app:motionTarget="@id/toggle" />
+
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/toggle" />
+
+
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="50"
+                app:motionTarget="@id/controlLayout" />
+
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/controlLayout" />
+
+
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="50"
+                app:motionTarget="@id/collapsedControlLayout" />
+
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="0"
+                app:motionTarget="@id/collapsedControlLayout" />
+
+        </KeyFrameSet>
+        <!--        <OnClick-->
+
+        <!--            app:touchRegionId="@id/ep_video_view" />-->
+
+
+    </Transition>
+
+    <ConstraintSet android:id="@+id/expanded">
+
+        <Constraint
+            android:id="@id/playerBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <CustomAttribute
+                app:attributeName="background"
+                app:customColorValue="@color/white" />
+
+            <CustomAttribute
+                app:attributeName="radius"
+                app:customDimension="0dp" />
+        </Constraint>
+
+
+        <Constraint
+            android:id="@id/toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@id/playerBackground"
+            app:layout_constraintStart_toStartOf="@id/playerBackground"
+            app:layout_constraintTop_toTopOf="@id/playerBackground">
+            <CustomAttribute
+                app:attributeName="radius"
+                app:customDimension="16dp" />
+        </Constraint>
+
+        <Constraint
+            android:id="@id/curSongIconLayout"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toBottomOf="@+id/guideline1"
+            app:layout_constraintEnd_toEndOf="@+id/playerBackground"
+            app:layout_constraintStart_toStartOf="@+id/playerBackground"
+            app:layout_constraintTop_toBottomOf="@+id/toggle"
+            app:visibilityMode="ignore">
+
+
+            <CustomAttribute
+                app:attributeName="cardCornerRadius"
+                app:customDimension="16dp" />
+        </Constraint>
+
+        <Constraint
+            android:id="@id/ep_video_view"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toBottomOf="@+id/guideline1"
+            app:layout_constraintEnd_toEndOf="@+id/playerBackground"
+            app:layout_constraintStart_toStartOf="@+id/playerBackground"
+            app:layout_constraintTop_toBottomOf="@+id/toggle"
+            app:visibilityMode="ignore">
+
+
+            <CustomAttribute
+                app:attributeName="cardCornerRadius"
+                app:customDimension="16dp" />
+        </Constraint>
+
+        <Constraint
+            android:id="@id/controlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/guideline6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline6">
+
+
+            <CustomAttribute
+                app:attributeName="cardCornerRadius"
+                app:customDimension="16dp" />
+
+        </Constraint>
+
+        <Constraint
+            android:id="@id/collapsedControlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/playerBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline4"
+            app:layout_constraintTop_toTopOf="@id/playerBackground">
+
+
+            <CustomAttribute
+                app:attributeName="cardCornerRadius"
+                app:customDimension="16dp" />
+        </Constraint>
+
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/collapsed">
+
+        <Constraint
+            android:id="@+id/playerBackground"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <CustomAttribute
+                app:attributeName="background"
+                app:customColorValue="@color/light_grey" />
+
+        </Constraint>
+        <Constraint
+            android:id="@id/toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:visibility="invisible"
+
+            app:layout_constraintEnd_toEndOf="@id/playerBackground"
+            app:layout_constraintStart_toStartOf="@id/playerBackground"
+            app:layout_constraintTop_toTopOf="@id/playerBackground">
+
+        </Constraint>
+
+
+        <Constraint
+            android:id="@id/curSongIconLayout"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/playerBackground"
+            app:layout_constraintStart_toStartOf="@+id/playerBackground"
+            app:layout_constraintTop_toTopOf="@+id/playerBackground"
+            app:visibilityMode="ignore">
+
+
+            <CustomAttribute
+                app:attributeName="cardCornerRadius"
+                app:customDimension="16dp" />
+
+        </Constraint>
+
+        <Constraint
+            android:id="@id/ep_video_view"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/playerBackground"
+            app:layout_constraintStart_toStartOf="@+id/playerBackground"
+            app:layout_constraintTop_toTopOf="@+id/playerBackground"
+            app:visibilityMode="ignore">
+
+
+            <CustomAttribute
+                app:attributeName="cardCornerRadius"
+                app:customDimension="16dp" />
+
+        </Constraint>
+
+
+        <Constraint
+            android:id="@id/controlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:visibility="invisible"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/playerBackground">
+
+
+            <CustomAttribute
+                app:attributeName="cardCornerRadius"
+                app:customDimension="16dp" />
+        </Constraint>
+
+        <Constraint
+            android:id="@id/collapsedControlLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline4"
+            app:layout_constraintTop_toTopOf="@id/playerBackground">
+
+
+            <CustomAttribute
+                app:attributeName="cardCornerRadius"
+                app:customDimension="16dp" />
+        </Constraint>
+
+
+    </ConstraintSet>
+
+</MotionScene>

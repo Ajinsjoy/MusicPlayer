@@ -4,7 +4,6 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
@@ -13,13 +12,11 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
 import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.cast.CastPlayer
 import com.google.android.exoplayer2.ext.cast.SessionAvailabilityListener
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.gms.cast.framework.CastContext
 import com.wac.mangoplayerpoc.R
@@ -164,8 +161,8 @@ class MusicService : MediaBrowserServiceCompat() {
             playerPrepare = { mediaMetadataCompat, playWhenReady, playbackStartPositionMs ->
                 curPlayingSong = mediaMetadataCompat
 
-                    preparePlayer(musicSource.songs, mediaMetadataCompat, true)
-                    showNotification()
+                preparePlayer(musicSource.songs, mediaMetadataCompat, true)
+                showNotification()
             }, this
         )
         mediaSessionConnector = MediaSessionConnector(mediaSession)
@@ -192,7 +189,7 @@ class MusicService : MediaBrowserServiceCompat() {
         serviceScope.launch {
             songRepository.getMusic().collect {
                 Log.d("serviceconnection", "on create")
-                musicSource.fetchMediaData("song")
+                musicSource.fetchMediaData("song", it)
             }
         }
     }
@@ -227,9 +224,18 @@ class MusicService : MediaBrowserServiceCompat() {
         val curSongIndex = if (curPlayingSong == null) 0 else songs.indexOf(itemToPlay)
 
 //        if(!applicationRepository.getVideoPlay()){
+        serviceScope.launch {
+
+                exoPlayer.setMediaSource(musicSource.asMediaSource(dataSourceFactoryFactory))
+                exoPlayer.seekTo(curSongIndex, 0)
+                exoPlayer.prepare()
+
+            exoPlayer.playWhenReady = playNow
+            currentPlaylistItems = songs
+
+        }
 
 
-        exoPlayer.setMediaSource(musicSource.asMediaSource(dataSourceFactoryFactory))
 
 //        } else {
 //            exoPlayer.setMediaSource(musicSource.asVideoSource(dataSourceFactoryFactory))
@@ -238,10 +244,9 @@ class MusicService : MediaBrowserServiceCompat() {
 //        val hlsMediaSource: HlsMediaSource = HlsMediaSource.Factory(dataSourceFactoryFactory)
 //            .createMediaSource(MediaItem.fromUri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"))
 //        exoPlayer.setMediaSource(hlsMediaSource)
-        exoPlayer.seekTo(curSongIndex, 0)
-        exoPlayer.prepare()
-        exoPlayer.playWhenReady = playNow
-        currentPlaylistItems = songs
+
+
+
 
     }
 
@@ -309,13 +314,12 @@ class MusicService : MediaBrowserServiceCompat() {
                 val resultsSent = musicSource.whenReady { isInitialized ->
                     if (isInitialized) {
 
-                            preparePlayer(musicSource.songs, musicSource.songs[0], false)
-                            result.sendResult(musicSource.asMediaItems())
-                            if (!isPlayerInitialized && musicSource.songs.isNotEmpty()) {
+                        preparePlayer(musicSource.songs, musicSource.songs[0], false)
+                        result.sendResult(musicSource.asMediaItems())
+                        if (!isPlayerInitialized && musicSource.songs.isNotEmpty()) {
 
-                                isPlayerInitialized = true
-                            }
-
+                            isPlayerInitialized = true
+                        }
 
 
                     } else {

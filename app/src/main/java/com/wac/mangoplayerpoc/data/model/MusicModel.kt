@@ -1,6 +1,9 @@
 package com.wac.mangoplayerpoc.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class MusicModel(
     val album: String,
     val artist: String,
@@ -13,7 +16,7 @@ data class MusicModel(
     val title: String,
     val totalTrackCount: Int,
     val trackNumber: Int
-){
+):Parcelable{
     fun toSong(): Song {
         return Song(
             id ?: "",

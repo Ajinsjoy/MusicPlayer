@@ -31,6 +31,7 @@ import com.wac.mangoplayerpoc.MobNavigationDirections
 import com.wac.mangoplayerpoc.R
 import com.wac.mangoplayerpoc.data.model.Song
 import com.wac.mangoplayerpoc.databinding.ActivityMainBinding
+import com.wac.mangoplayerpoc.presentation.motionlayout.PlayingNowFragment
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
 import javax.inject.Inject
@@ -63,6 +64,10 @@ class MainActivity : AppCompatActivity() {
         setUpNavigation()
         setInsetter()
         setClickListener()
+//
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.fragmentContainer, PlayingNowFragment())
+            .commit()
 
     }
 
@@ -225,6 +230,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeMusic() {
+
+
         lifecycleScope.launchWhenStarted {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.mediaItem.collect {
@@ -232,8 +239,15 @@ class MainActivity : AppCompatActivity() {
                         playingSong = it.song
                         setCurPlayingData(it.song)
 
-                        binding.curPlayingItem.isVisible =
-                            destination.id != R.id.nowPlayingFragment && it.showLastPlayedSong &&  destination.id != R.id.reelsFragment
+//                        binding.curPlayingItem.isVisible =
+
+if(destination.id != R.id.playingNowFragment && it.showLastPlayedSong && destination.id != R.id.reelsFragment){
+
+}
+
+
+//                        binding.fragmentContainer.isVisible =
+//                            destination.id != R.id.nowPlayingFragment && it.showLastPlayedSong && destination.id != R.id.reelsFragment
                         binding.linearProgressIndicator.isVisible = binding.curPlayingItem.isVisible
 
                         binding.linearProgressIndicator.max = it.duration.toInt()

@@ -11,8 +11,11 @@
     <color name="grey">#1F1F1F</color>
     <color name="dark_grey">#1F1F1F</color>
     <color name="light_grey">#575656</color>
+    <color name="trans_light_grey">#CE8C8B8B</color>
+    <color name="text_grey">#CECACACA</color>
     <color name="bottomNavColor">#FBFBFB</color>
     <color name="transparent">#00FFFFFF</color>
+
     <color name="transparent_black">#81070707</color>
     <color name="transparent_black_reels">#DA070707</color>
 </resources>
